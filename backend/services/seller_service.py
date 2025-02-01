@@ -1,11 +1,11 @@
 from models.seller_model import Seller
 from extensions import db
 
-def create_seller(seller_id, name, contact_email):
+def create_seller(seller_id, name,email):
     seller = Seller(
         seller_id=seller_id,
         name=name,
-        contact_email=contact_email
+        email=email
     )
     db.session.add(seller)
     db.session.commit()

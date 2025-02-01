@@ -1,31 +1,20 @@
 from flask import Blueprint, request, jsonify
-from services.product_service import create_product, get_product_by_id, get_all_products
+from services.product_service import get_products_by_category
 
-product_bp = Blueprint('product_bp', __name__)
+product_bp = Blueprint('product', __name__)
 
-# Route to create a product
-@product_bp.route('/product', methods=['POST'])
-def add_product():
-    data = request.get_json()
-    name = data.get('name')
-    description = data.get('description')
-    category = data.get('category')
-    meta_tags = data.get('meta_tags')
-    images = data.get('images')
+@product_bp.route('/category/<int:category_id>/products', methods=['GET'])
+def get_products_by_category_route(category_id):
+    # Call the service to get products by category
+    products = get_products_by_category(category_id)
     
-    product = create_product(name, description, category, meta_tags, images)
-    return jsonify({'message': 'Product created', 'product_id': product.product_id}), 201
-
-# Route to get product by ID
-@product_bp.route('/product/<product_id>', methods=['GET'])
-def get_product(product_id):
-    product = get_product_by_id(product_id)
-    if not product:
-        return jsonify({'message': 'Product not found'}), 404
-    return jsonify({'product_id': product.product_id, 'name': product.name, 'description': product.description, 'category': product.category, 'meta_tags': product.meta_tags, 'images': product.images})
-
-# Route to get all products
-@product_bp.route('/products', methods=['GET'])
-def get_products():
-    products = get_all_products()
-    return jsonify([{'product_id': p.product_id, 'name': p.name, 'category': p.category} for p in products])
+    if products:
+        # Return product details in JSON format
+        return jsonify([{
+            'product_id': product.uid,
+            'name': product.name,
+            'description': product.description,
+            'category_id': product.category_id
+        } for product in products]), 200
+    else:
+        return jsonify({"error": "No products found for this category"}), 404

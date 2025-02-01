@@ -1,15 +1,13 @@
 # In app.py
-
 from flask import Flask, request, jsonify, make_response
 from flask_cors import CORS
 from extensions import db
 from config import Config
 from routes.user_routes import user_bp as user_routes
-from routes.product_routes import product_bp
-from routes.product_listing_routes import product_listing_bp
-from routes.seller_routes import seller_bp
-from routes.order_routes import order_bp
-
+from routes.category_routes import category_bp as category_routes
+from routes.product_routes import product_bp as product_routes
+from routes.seller_routes import seller_bp as seller_routes
+from routes.product_listing_routes import product_listing_bp as product_listing_routes
 # Initialize Flask app
 app = Flask(__name__)
 
@@ -23,11 +21,12 @@ app.config.from_object(Config)
 db.init_app(app)
 
 # Register Blueprints with URL prefixes
-app.register_blueprint(order_bp, url_prefix='/orders')
+
+app.register_blueprint(product_listing_routes,url_prefix='/product-listings')
 app.register_blueprint(user_routes, url_prefix='/users')
-app.register_blueprint(product_bp, url_prefix='/products')
-app.register_blueprint(product_listing_bp, url_prefix='/product_listings')
-app.register_blueprint(seller_bp, url_prefix='/sellers')
+app.register_blueprint(category_routes, url_prefix='/category')
+app.register_blueprint(seller_routes,url_prefix='/seller')
+app.register_blueprint(product_routes, url_prefix='/products')
 
 # Handle OPTIONS requests for CORS preflight
 @app.before_request
