@@ -16,7 +16,7 @@ function SignInPage() {
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      navigate("/homepage"); // Redirect to HomePage after successful sign-in
+      navigate("/shop"); // Redirect to HomePage after successful sign-in
     } catch (err) {
       setError(err.message);
     }

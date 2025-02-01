@@ -5,7 +5,7 @@ class User(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     uid = db.Column(db.String(255), unique=True, nullable=False)  # Firebase UID
-    name = db.Column(db.String(255), nullable=False)
+    number = db.Column(db.String(255), nullable=False)
     email = db.Column(db.String(255), unique=True, nullable=False)
 
     def __init__(self, uid, name, email):
@@ -16,3 +16,18 @@ class User(db.Model):
 
     def __repr__(self):
         return f'<User {self.name}>'
+
+class UserAddress(db.Model):
+    __tablename__ = 'user_addresses'
+
+    uid = db.Column(db.String(255), db.ForeignKey('users.uid'), primary_key=True)
+    addresses = db.Column(db.JSON, default=[])
+
+    user = db.relationship('User', backref=db.backref('user_addresses', lazy=True))
+
+    def __init__(self, uid, addresses):
+        self.uid = uid
+        self.addresses = addresses
+
+    def __repr__(self):
+        return f'<UserAddress {self.uid}>'
