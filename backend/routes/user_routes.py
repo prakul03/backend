@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from services.user_service import create_user, add_address_to_user, get_addresses_for_user
+from services.user_service import create_user, get_addresses_for_user, add_address_to_user
 
 user_bp = Blueprint('user', __name__)
 
@@ -7,19 +7,16 @@ user_bp = Blueprint('user', __name__)
 def signup():
     data = request.get_json()
     uid = data.get("uid")  # UID from Firebase Authentication
-    email = data.get("email")  # Email instead of phone number
+    mail = data.get("mail")  # Email instead of phone number
 
-    if not uid or not email:
-        return jsonify({"error": "UID and email are required"}), 400
+    if not uid or not mail:
+        return jsonify({"error": "UID and mail are required"}), 400
 
-    user = create_user(uid, email)
-    return jsonify({
-        "uid": user.uid,
-        "email": user.email,
-        "created_at": user.created_at
-    }), 201
+    user = create_user(uid, mail)
+    return 201
 
-@user_bp.route('/user/<uid>/addresses', methods=['POST'])
+
+@user_bp.route('/<uid>', methods=['POST'])
 def add_address(uid):
     data = request.get_json()
     address = data.get("address")  # Expecting a JSON object for the address
@@ -33,13 +30,13 @@ def add_address(uid):
         return jsonify({
             "uid": user_address.uid,
             "addresses": user_address.addresses,
-            "created_at": user_address.created_at
         }), 200
     else:
         return jsonify({"error": "User not found"}), 404
 
-@user_bp.route('/user/<uid>/addresses', methods=['GET'])
+@user_bp.route('/<uid>/addresses', methods=['GET'])
 def get_addresses(uid):
+    # Retrieve all addresses for the given user
     addresses = get_addresses_for_user(uid)
     
     if addresses:
@@ -48,4 +45,4 @@ def get_addresses(uid):
             "addresses": addresses
         }), 200
     else:
-        return jsonify({"error": "No addresses found for this user"}), 404
+        return jsonify({"error": "No addresses found for this user"}), 201

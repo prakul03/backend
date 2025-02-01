@@ -1,28 +1,26 @@
-from extensions import db
 from datetime import datetime
+from extensions import db
+
 class User(db.Model):
     __tablename__ = 'users'
     
-    id = db.Column(db.Integer, primary_key=True)
-    uid = db.Column(db.String(255), unique=True, nullable=False)  # Firebase UID (varchar equivalent)
-    name = db.Column(db.String(255), nullable=False)  # Name (varchar equivalent)
-    email = db.Column(db.String(255), unique=True, nullable=False)  # Email (varchar equivalent)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)  # Created At timestamp
+    # Set `uid` as the primary key
+    uid = db.Column(db.String(255), primary_key=True, nullable=False)  # Firebase UID (varchar equivalent)
+    mail = db.Column(db.String(255), unique=True, nullable=False)  # Email (varchar equivalent)
 
-    def __init__(self, uid, name, email):
-        print(f"Creating a new User object with UID: {uid}, Name: {name}, Email: {email}")
+    def __init__(self, uid, mail):
+        print(f"Creating a new User object with UID: {uid}, Mail: {mail}")
         self.uid = uid
-        self.name = name
-        self.email = email
+        self.mail = mail
 
     def __repr__(self):
-        return f'<User {self.name}>'
-    
+        return f'<User {self.mail}>'
 
 class UserAddress(db.Model):
     __tablename__ = 'user_addresses'
 
-    uid = db.Column(db.String(255), db.ForeignKey('users.uid'), primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)  # New primary key
+    uid = db.Column(db.String(255), db.ForeignKey('users.uid'), nullable=False)
     addresses = db.Column(db.JSON, default=[])
 
     user = db.relationship('User', backref=db.backref('user_addresses', lazy=True))
