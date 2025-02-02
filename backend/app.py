@@ -9,7 +9,6 @@ from routes.product_routes import product_bp as product_routes
 from routes.seller_routes import seller_bp as seller_routes
 from routes.product_listing_routes import product_listing_bp as product_listing_routes
 from routes.cart_routes import cart_blueprint 
-from routes.order_routes import order_blueprint
 # Initialize Flask app
 app = Flask(__name__)
 
@@ -24,13 +23,12 @@ db.init_app(app)
 
 # Register Blueprints with URL prefixes
 
-app.register_blueprint(product_listing_routes,url_prefix='/product-listings')
+app.register_blueprint(product_listing_routes)
 app.register_blueprint(user_routes, url_prefix='/users')
-app.register_blueprint(category_routes, url_prefix='/category')
+app.register_blueprint(category_routes)
 app.register_blueprint(seller_routes,url_prefix='/seller')
 app.register_blueprint(product_routes, url_prefix='/products')
 app.register_blueprint(cart_blueprint)
-app.register_blueprint(order_blueprint)
 # Handle OPTIONS requests for CORS preflight
 @app.before_request
 def handle_preflight():
@@ -38,9 +36,9 @@ def handle_preflight():
         response = make_response()
         # Allow any localhost origin
         response.headers["Access-Control-Allow-Origin"] = "http://localhost:*"
-        response.headers["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS"
+        response.headers["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS,PUT,DELETE"
         response.headers["Access-Control-Allow-Headers"] = "Content-Type"
         return response
 
 if __name__ == '__main__':
-  app.run(host='0.0.0.0', port=5001)
+  app.run(host='0.0.0.0', port=5002)

@@ -1,4 +1,4 @@
-from models import category_model as Category
+from models.category_model import Category
 from extensions import db
 
 def get_all_categories():
@@ -9,7 +9,7 @@ def get_all_categories():
         for category in categories:
             category_data.append({
                 'id': category.category_id,
-                'name': category.name,
+                'name': category.category_name,  # Ensure category_name is being used
                 'image_url': category.image_url
             })
         return category_data

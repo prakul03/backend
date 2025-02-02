@@ -9,12 +9,13 @@ def get_products_by_category_route(category_id):
     products = get_products_by_category(category_id)
     
     if products:
-        # Return product details in JSON format
+        # Return product details including images in JSON format
         return jsonify([{
             'product_id': product.uid,
             'name': product.name,
             'description': product.description,
-            'category_id': product.category_id
+            'category_id': product.category_id,
+            'images': product.images
         } for product in products]), 200
     else:
         return jsonify({"error": "No products found for this category"}), 404

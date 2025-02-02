@@ -64,3 +64,7 @@ def remove_item_from_cart(uid, product_listing_id):
     db.session.commit()
 
     return {"message": "Item removed from cart"}, 200
+
+def get_cart_items(uid):
+    # Assuming you're querying the database for cart items
+    return Cart.query.filter_by(uid=uid).all()
